@@ -71,15 +71,22 @@ document.addEventListener("DOMContentLoaded", () => {
     tracking-wide flex items-center gap-2 justify-center sm:justify-start
   `;
   locationSpan.innerHTML = `🏙️ <span>${name}</span>`;
-  const nowUTC = new Date();
-  const localTimeDate = new Date(nowUTC.getTime() + timezone * 1000);
-  const localTime = `${String(localTimeDate.getHours()).padStart(2, "0")}:${String(localTimeDate.getMinutes()).padStart(2, "0")}`;
+  const utcMillis = Date.now();
+  const localMillis = utcMillis + timezone * 1000;
+  const localDate = new Date(localMillis);
+  const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const dayName = days[localDate.getUTCDay()];
+  let hours = localDate.getUTCHours();
+  const minutes = String(localDate.getUTCMinutes()).padStart(2, "0");
+  const ampm = hours >= 12 ? "PM" : "AM";
+  hours = hours % 12 || 12;
+  const formattedTime = `${hours}:${minutes} ${ampm}`;
   const timeSpan = document.createElement("span");
   timeSpan.className = `
-    sm:col-span-1 text-white text-3xl sm:text-4xl font-mono 
-    text-center
+    sm:col-span-1 text-white text-base sm:text-xl font-mono 
+    text-center flex flex-col items-center
   `;
-  timeSpan.textContent = localTime;
+  timeSpan.innerHTML = `<span>${formattedTime}</span><span class="text-sm">${dayName}</span>`;
   const weatherSpan = document.createElement("span");
   weatherSpan.className = `
     sm:col-span-1 text-white text-lg sm:text-xl font-medium 
