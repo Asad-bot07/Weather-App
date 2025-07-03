@@ -57,42 +57,40 @@ document.addEventListener("DOMContentLoaded", () => {
     return data;
   }
   function displayWeatherData(weatherData) {
-    //console.log(weatherData);
-    const { name, main } = weatherData;
-    const card = document.createElement("div");
-    card.className = `
-bg-gradient-to-r from-gray-900 to-gray-800 
-min-h-[140px] m-2 p-4 md:p-6 rounded-2xl shadow-lg 
-grid grid-cols-1 sm:grid-cols-4 gap-4 sm:gap-2 items-center
-transition-all duration-300
-`;
-    const locationSpan = document.createElement("span");
-    locationSpan.className = `
-sm:col-span-2 text-white text-xl sm:text-2xl font-semibold 
-tracking-wide flex items-center gap-2 justify-center sm:justify-start
-`;
-    locationSpan.innerHTML = `🏙️ <span>${name}</span>`;
-    const now = new Date();
-    const localTime = `${String(now.getHours()).padStart(2, "0")}:${String(
-      now.getMinutes()
-    ).padStart(2, "0")}`;
-    const timeSpan = document.createElement("span");
-    timeSpan.className = `
-sm:col-span-1 text-white text-3xl sm:text-4xl font-mono 
-text-center
-`;
-    timeSpan.textContent = localTime;
-    const weatherSpan = document.createElement("span");
-    weatherSpan.className = `
-sm:col-span-1 text-white text-lg sm:text-xl font-medium 
-text-center sm:text-right pr-0 sm:pr-2 flex justify-center sm:justify-end items-center gap-2
-`;
-    weatherSpan.innerHTML = `☁️ <span>${Math.round(main.temp)}°C</span>`;
-    card.appendChild(locationSpan);
-    card.appendChild(timeSpan);
-    card.appendChild(weatherSpan);
-    document.getElementById("WeatherList").appendChild(card);
-  }
+  const { name, main, timezone } = weatherData;
+  const card = document.createElement("div");
+  card.className = `
+    bg-gradient-to-r from-gray-900 to-gray-800 
+    min-h-[140px] m-2 p-4 md:p-6 rounded-2xl shadow-lg 
+    grid grid-cols-1 sm:grid-cols-4 gap-4 sm:gap-2 items-center
+    transition-all duration-300
+  `;
+  const locationSpan = document.createElement("span");
+  locationSpan.className = `
+    sm:col-span-2 text-white text-xl sm:text-2xl font-semibold 
+    tracking-wide flex items-center gap-2 justify-center sm:justify-start
+  `;
+  locationSpan.innerHTML = `🏙️ <span>${name}</span>`;
+  const nowUTC = new Date();
+  const localTimeDate = new Date(nowUTC.getTime() + timezone * 1000);
+  const localTime = `${String(localTimeDate.getHours()).padStart(2, "0")}:${String(localTimeDate.getMinutes()).padStart(2, "0")}`;
+  const timeSpan = document.createElement("span");
+  timeSpan.className = `
+    sm:col-span-1 text-white text-3xl sm:text-4xl font-mono 
+    text-center
+  `;
+  timeSpan.textContent = localTime;
+  const weatherSpan = document.createElement("span");
+  weatherSpan.className = `
+    sm:col-span-1 text-white text-lg sm:text-xl font-medium 
+    text-center sm:text-right pr-0 sm:pr-2 flex justify-center sm:justify-end items-center gap-2
+  `;
+  weatherSpan.innerHTML = `☁️ <span>${Math.round(main.temp)}°C</span>`;
+  card.appendChild(locationSpan);
+  card.appendChild(timeSpan);
+  card.appendChild(weatherSpan);
+  document.getElementById("WeatherList").appendChild(card);
+}
   function showError() {
     document.getElementById("ErrorMessage").classList.remove("hidden");
   }
